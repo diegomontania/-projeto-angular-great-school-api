@@ -24,11 +24,13 @@ namespace GreatSchool.API
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .SetIsOriginAllowed((host) => true)
-                   .AllowCredentials());
+                    policy => {
+                        policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowCredentials();
+                    });
             });
 
             services.AddControllers();
