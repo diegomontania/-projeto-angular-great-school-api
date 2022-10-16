@@ -1,36 +1,44 @@
-using GreatSchool.API;
 using GreatSchool.API.Models;
-using Microsoft.VisualBasic;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlTypes;
+using System.Runtime.ConstrainedExecution;
 
-namespace GreatSchool.API
+namespace GreatSchool.API.Models
 {
     public class Aluno
     {
+        [Required]
         [Key()]
         public int Id { get; set; }
 
+        [Required]
+        [MaxLength(50)]
         public string Nome { get; set; }
 
+        [Required]
+        [MaxLength(50)]
         public string Sobrenome { get; set; }
 
+        [Required]
+        [RegularExpression("\\([1-9]\\d\\)\\s9?\\d{4}-\\d{4}", ErrorMessage = "Número de telefone inválido")]
         public string Telefone { get; set; }
 
+        [Required]
         public string Email { get; set; }
 
+        [Required]
+        [MaxLength(2)]
         public string Estado { get; set; }
 
-        //propriedade de navegacao https://stackoverflow.com/a/11508155/13156642
-        //1 aluno tem apenas 1 matricula
-        public int MatriculaId { get; set; }
-        public Matricula Matricula { get; set; }
+        [Required]
+        public DateTime DataMatricula { get; set; }
 
-        //propriedade de navegacao https://stackoverflow.com/a/11508155/13156642
-        //1 aluno está associado a 1 turma
-        public int TurmaId { get; set; }
-        public Turma Turma { get; set; }
+        //1 aluno está associado a 1 turma - ForeignKey
+        //possui um nullable na propriedade ID e na propriedade de navegacao, significa que o relacionamento é opcional. Um aluno pode ter ou não uma turma.
+        //porem o Id da turma nem o objeto de navegacao sao necessarios para criacao de um aluno
+        public int? TurmaId { get; set; }
+
+        public Turma? Turma { get; set; } //propriedade de navegacao https://stackoverflow.com/a/11508155/13156642
     }
 }

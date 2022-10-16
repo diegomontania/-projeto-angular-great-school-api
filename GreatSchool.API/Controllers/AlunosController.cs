@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GreatSchool.API;
 using GreatSchool.API.Context;
+using GreatSchool.API.Models;
 
 namespace GreatSchool.API.Controllers
 {
@@ -25,14 +23,14 @@ namespace GreatSchool.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Aluno>>> GetAlunos()
         {
-            return await _context.Aluno.ToListAsync();
+            return await _context.Alunos.ToListAsync();
         }
 
         // GET: api/Alunos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Aluno>> GetAluno(int id)
         {
-            var aluno = await _context.Aluno.FindAsync(id);
+            var aluno = await _context.Alunos.FindAsync(id);
 
             if (aluno == null)
             {
@@ -80,7 +78,7 @@ namespace GreatSchool.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Aluno>> PostAluno(Aluno aluno)
         {
-            _context.Aluno.Add(aluno);
+            _context.Alunos.Add(aluno);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAluno", new { id = aluno.Id }, aluno);
@@ -90,13 +88,13 @@ namespace GreatSchool.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Aluno>> DeleteAluno(int id)
         {
-            var aluno = await _context.Aluno.FindAsync(id);
+            var aluno = await _context.Alunos.FindAsync(id);
             if (aluno == null)
             {
                 return NotFound();
             }
 
-            _context.Aluno.Remove(aluno);
+            _context.Alunos.Remove(aluno);
             await _context.SaveChangesAsync();
 
             return aluno;
@@ -104,7 +102,7 @@ namespace GreatSchool.API.Controllers
 
         private bool AlunoExists(int id)
         {
-            return _context.Aluno.Any(e => e.Id == id);
+            return _context.Alunos.Any(e => e.Id == id);
         }
     }
 }

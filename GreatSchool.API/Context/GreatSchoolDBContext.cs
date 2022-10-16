@@ -3,31 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreatSchool.API.Context
 {
-    //continuar aqui
-    //https://www.youtube.com/watch?v=OtLjyRoAkDA&list=PLP8G5dOGVPmCelJpg8qWzO8zMfTxf0K9k&index=6
-
     //fluent api o que pode ser feito, definir nome de tabelas, nome de chaves primarias,
     //ignorar campos na classe para serem ignorados na criacao da tabela, relacionamentos
     //https://www.youtube.com/watch?v=7M501P-23Jg
 
-    //relacionamentos 1-1 e 1-N -- MUITO BOM! TALVEZ DAR CONTINUIEDADE POR AQUI!
-    //https://www.youtube.com/watch?v=eHT6G912po0
-
-    //propriedades de navegacao
-    //https://www.youtube.com/watch?v=rXP632YwwfQ 1-N
-    //https://www.youtube.com/watch?v=Qh2hgIc90y0 N-N
+    //Fluent api - relacionamentos
+    //https://www.youtube.com/watch?v=rKnjUnZIQ48
 
     public class GreatSchoolDBContext : DbContext
     {
         //toda vez que for criado uma propriedade ou objeto com 'virtual' é utilizado o 'LazyLoading' para carrega-los
         //https://stackoverflow.com/a/15247765/13156642
         public virtual DbSet<Aluno> Alunos { get; set; }
-
         public virtual DbSet<Professor> Professores { get; set; }
-
         public virtual DbSet<Turma> Turmas { get; set; }
-
-        public virtual DbSet<Matricula> Matriculas { get; set; }
 
         public GreatSchoolDBContext() { }
 
@@ -36,20 +25,24 @@ namespace GreatSchool.API.Context
         //cria os relacionamentos entre os modelos
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //um aluno tem uma matricula e apenas uma matricula
-            modelBuilder.Entity<Aluno>()
-                .HasOne(m => m.Matricula)
-                .WithOne();
+            //(1-1) uma turma tem um professor e apenas um professor
+            modelBuilder.Entity<Turma>()                    //uma turma
+                .HasOne(p => p.Professor)                   //tem um professor
+                .WithOne(t => t.Turma)                      //e este professor possui uma turma
+                .HasForeignKey<Turma>(p => p.ProfessorId);  //e a turma, tem o campo 'ProfessorId' como ForeignKey do professor     
 
-            //uma turma tem um professor e apenas um professor
-            modelBuilder.Entity<Turma>()
-                .HasOne(p => p.Professor)
-                .WithOne();
+            modelBuilder.Entity<Aluno>()        //na tabela aluno
+                .Property(d => d.DataMatricula) //o campo DataMatricula
+                .HasColumnType("Date");         //é do tipo Date
 
-            //uma turma tem N alunos e os alunos possuem apenas uma turma
-            modelBuilder.Entity<Turma>()
-                .HasMany(a => a.Alunos)
-                .WithOne();
+            //(1-N) um aluno tem uma turma
+            modelBuilder.Entity<Aluno>()        //um aluno
+                .HasOne(t => t.Turma)           //tem uma turma
+                .WithMany(t => t.Alunos)        //a turma tem muitos alunos
+                .HasForeignKey(a => a.TurmaId); //e o aluno, tem o campo 'TurmaId' como ForeignKey da turma
+
+            //falta fazer um exemplo N-N
+            //https://www.youtube.com/channel/UCoqYHkQy8q5nEMv1gkcZgSw/search?query=Fluent%20API
         }
     }
 }

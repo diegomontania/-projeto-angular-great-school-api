@@ -4,14 +4,16 @@ using GreatSchool.API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GreatSchool.API.Migrations
 {
     [DbContext(typeof(GreatSchoolDBContext))]
-    partial class GreatSchoolDBContextModelSnapshot : ModelSnapshot
+    [Migration("20221016001153_campos obrigatorios")]
+    partial class camposobrigatorios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
